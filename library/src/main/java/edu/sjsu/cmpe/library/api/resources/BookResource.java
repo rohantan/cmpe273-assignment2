@@ -24,6 +24,8 @@ import edu.sjsu.cmpe.library.dto.BooksDto;
 import edu.sjsu.cmpe.library.dto.LinkDto;
 import edu.sjsu.cmpe.library.repository.BookRepositoryInterface;
 
+import javax.jms.JMSException;
+
 @Path("/v1/books")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -45,6 +47,7 @@ public class BookResource {
     @Path("/{isbn}")
     @Timed(name = "view-book")
     public BookDto getBookByIsbn(@PathParam("isbn") LongParam isbn) {
+    	System.out.println("******view book******");
 	Book book = bookRepository.getBookByISBN(isbn.get());
 	BookDto bookResponse = new BookDto(book);
 	bookResponse.addLink(new LinkDto("view-book", "/books/" + book.getIsbn(),
@@ -75,6 +78,7 @@ public class BookResource {
     @Path("/")
     @Timed(name = "view-all-books")
     public BooksDto getAllBooks() {
+    	System.out.println("******all books******");
 	BooksDto booksResponse = new BooksDto(bookRepository.getAllBooks());
 	booksResponse.addLink(new LinkDto("create-book", "/books", "POST"));
 
@@ -85,15 +89,15 @@ public class BookResource {
     @Path("/{isbn}")
     @Timed(name = "update-book-status")
     public Response updateBookStatus(@PathParam("isbn") LongParam isbn,
-	    @DefaultValue("available") @QueryParam("status") Status status) {
-	Book book = bookRepository.getBookByISBN(isbn.get());
-	book.setStatus(status);
+    		@DefaultValue("available") @QueryParam("status") Status status)throws JMSException {
+    	System.out.println("******update-book-status API******");
+    	Book book = bookRepository.update(isbn.get(), status);
+    	System.out.println("******updated status: "+book.getStatus());
+    	BookDto bookResponse = new BookDto(book);
+    	String location = "/books/" + book.getIsbn();
+    	bookResponse.addLink(new LinkDto("view-book", location, "GET"));
 
-	BookDto bookResponse = new BookDto(book);
-	String location = "/books/" + book.getIsbn();
-	bookResponse.addLink(new LinkDto("view-book", location, "GET"));
-
-	return Response.status(200).entity(bookResponse).build();
+    	return Response.status(200).entity(bookResponse).build();
     }
 
     @DELETE

@@ -23,7 +23,44 @@ public class ProcurementServiceConfiguration extends Configuration {
     @JsonProperty
     private JerseyClientConfiguration httpClient = new JerseyClientConfiguration();
 
-    /**
+    private String apolloUser;
+    private String apolloPassword;
+    private String apolloHost;
+    private String apolloPort;
+    
+    public String getApolloHost() {
+		return apolloHost;
+	}
+
+	public void setApolloHost(String apolloHost) {
+		this.apolloHost = apolloHost;
+	}
+
+	public String getApolloPort() {
+		return apolloPort;
+	}
+
+	public void setApolloPort(String apolloPort) {
+		this.apolloPort = apolloPort;
+	}
+
+	public String getApolloUser() {
+		return apolloUser;
+	}
+
+	public void setApolloUser(String apolloUser) {
+		this.apolloUser = apolloUser;
+	}
+
+	public String getApolloPassword() {
+		return apolloPassword;
+	}
+
+	public void setApolloPassword(String apolloPassword) {
+		this.apolloPassword = apolloPassword;
+	}
+
+	/**
      * 
      * @return
      */

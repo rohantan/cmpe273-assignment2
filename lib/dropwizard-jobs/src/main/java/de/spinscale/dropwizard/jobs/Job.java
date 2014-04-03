@@ -1,7 +1,6 @@
 package de.spinscale.dropwizard.jobs;
 
 import com.yammer.metrics.Metrics;
-import com.yammer.metrics.core.Counter;
 import com.yammer.metrics.core.Timer;
 import com.yammer.metrics.core.TimerContext;
 import org.quartz.JobExecutionContext;

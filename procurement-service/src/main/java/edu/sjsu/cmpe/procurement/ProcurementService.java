@@ -17,9 +17,6 @@ public class ProcurementService extends Service<ProcurementServiceConfiguration>
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    /**
-     * FIXME: THIS IS A HACK!
-     */
     public static Client jerseyClient;
 
     public static void main(String[] args) throws Exception {
@@ -56,7 +53,6 @@ public class ProcurementService extends Service<ProcurementServiceConfiguration>
 	String queueName = configuration.getStompQueueName();
 	String topicName = configuration.getStompTopicPrefix();
 	log.debug("Queue name is {}. Topic is {}", queueName, topicName);
-	// TODO: Apollo STOMP Broker URL and login
 
     }
 }

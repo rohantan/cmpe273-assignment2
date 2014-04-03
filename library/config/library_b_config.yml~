@@ -1,23 +1,22 @@
 ##############################
-# Library A instance Config  #
+# Library B instance Config  #
 ##############################
 
 # Apollo STOMP Broker Configuration
 # FIXME - Replace 99999 with your ID
 stompQueueName: /queue/96933.book.orders
 
-# Library A subscribes to all book categories
+# Library B subscribes to the Computer category ONLY!
 # FIXME - Replace 99999 with your ID
-# If book.* doesn't work, try book.all
-stompTopicName: /topic/96933.book.*
+stompTopicName: /topic/96933.book.computer
 
-# Name for library A
-libraryName: library-a
+# Name for library B
+libraryName: library-b
 
 # TODO: Apollo STOMP Broker URL and login
 apolloUser: "admin"
 apolloPassword: "password"
-apolloHost: "54.193.56.218"
+apolloHost: "54.219.156.168"
 apolloPort: 61613
 
 # HTTP-specific options.
@@ -26,10 +25,10 @@ http:
   rootPath: /library/*
 
   # The port on which the HTTP server listens for service requests.
-  port: 8001
+  port: 8002
 
   # The port on which the HTTP server listens for administrative requests.
-  adminPort: 9001
+  adminPort: 9002
 
 # Logging settings.
 logging:
@@ -62,12 +61,12 @@ logging:
     threshold: ALL
     
     # The file to which current statements will be logged.
-    currentLogFilename: ./logs/library-a.log
+    currentLogFilename: ./logs/library-b.log
     
     # When the log file rotates, the archived log will be renamed to this and gzipped. The
     # %d is replaced with the previous day (yyyy-MM-dd). Custom rolling windows can be created
     # by passing a SimpleDateFormat-compatible format as an argument: "%d{yyyy-MM-dd-hh}".
-    archivedLogFilenamePattern: ./logs/library-a-%d.log.gz
+    archivedLogFilenamePattern: ./logs/library-b-%d.log.gz
     
     # The number of archived files to keep.
     archivedFileCount: 5
