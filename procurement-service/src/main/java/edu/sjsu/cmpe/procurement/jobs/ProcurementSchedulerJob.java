@@ -43,32 +43,33 @@ public class ProcurementSchedulerJob extends Job {
 	public void doJob() {
 		String strResponse = ProcurementService.jerseyClient.resource(
 				"http://ip.jsontest.com/").get(String.class);
-		log.debug("Response from jsontest.com: {}", strResponse);
-
-		ProcurementSchedulerJob object = new ProcurementSchedulerJob();
+		log.debug("Response from jsontest.com:", strResponse);
 
 		String isbnList="";
+		ProcurementSchedulerJob procurementSchedulerJob = new ProcurementSchedulerJob();
+
+		
 		try {
-			isbnList = object.consumer();
-			System.out.println("consuming");
+			isbnList = procurementSchedulerJob.messageConsumer();
+			System.out.println("consuming messages from Apollo Broker Queue");
 		} catch (JMSException e) {
 			e.printStackTrace();
 		}
 		if(isbnList != "")
 		{
-			object.postToPublisher(isbnList);
-			System.out.println("posting to publisher");
+			procurementSchedulerJob.postMessageToPublisher(isbnList);
+			System.out.println("posting messages to publisher");
 		}
 
 		try {
-			object.Publisher();
-			System.out.println("consuming from publisher");
+			procurementSchedulerJob.getMessagesPublisher();
+			System.out.println("consuming messages from publisher");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void Publisher() throws ParseException, JMSException
+	public void getMessagesPublisher() throws ParseException, JMSException
 	{
 		JSONParser parser = new JSONParser();
 
@@ -84,17 +85,17 @@ public class ProcurementSchedulerJob extends Job {
 		BufferedReader br = new BufferedReader(new InputStreamReader( (conn.getInputStream())));
 
 		String output;
-		System.out.println("Output from Server .... \n");
+		System.out.println("Output from Publisher::  \n");
 		while ((output = br.readLine()) != null)
 		{
 			System.out.println(output);
 			Object obj = parser.parse(output);
 			JSONObject jsonObject = (JSONObject) obj;
-			JSONArray responseMsg = (JSONArray) jsonObject.get("shipped_books");
-			String []msgFormat = new String[responseMsg.size()];
-			for(int i=0;i<responseMsg.size();i++)
+			JSONArray publisherResponseMsg = (JSONArray) jsonObject.get("shipped_books");
+			String []msgFormat = new String[publisherResponseMsg.size()];
+			for(int i=0;i<publisherResponseMsg.size();i++)
 			{
-				JSONObject books = (JSONObject) responseMsg.get(i);
+				JSONObject books = (JSONObject) publisherResponseMsg.get(i);
 				msgFormat[i]= books.get("isbn").toString() +":"+"\""+books.get("title").toString()+"\""+":"+"\""+books.get("category").toString()+"\""+":"+"\""+books.get("coverimage").toString()+"\"";
 				System.out.println(msgFormat[i]);
 
@@ -113,13 +114,13 @@ public class ProcurementSchedulerJob extends Job {
 			Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 			for(int i=0;i<msgFormat.length;i++)
 			{
-				JSONObject books = (JSONObject) responseMsg.get(i);
+				JSONObject books = (JSONObject) publisherResponseMsg.get(i);
 				Destination dest = new StompJmsDestination(destination+"."+books.get("category").toString());
 				MessageProducer producer = session.createProducer(dest);
 				producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 
-				String data = msgFormat[i];
-				TextMessage msg = session.createTextMessage(data);
+				String msgData = msgFormat[i];
+				TextMessage msg = session.createTextMessage(msgData);
 				msg.setLongProperty("id", System.currentTimeMillis());
 				producer.send(msg);
 				System.out.println(msg);
@@ -141,7 +142,7 @@ public class ProcurementSchedulerJob extends Job {
 		}
 	}
 	
-	public void postToPublisher(String str)
+	public void postMessageToPublisher(String isbnList)
 	{
 		try {
 			URL url = new URL("http://54.193.56.218:9000/orders");
@@ -150,7 +151,7 @@ public class ProcurementSchedulerJob extends Job {
 			conn.setRequestMethod("POST");
 			conn.setRequestProperty("Content-Type", "application/json");
 
-			String input = "{\"id\":\"96933\",\"order_book_isbns\":["+str+"]}";
+			String input = "{\"id\":\"96933\",\"order_book_isbns\":["+isbnList+"]}";
 
 			OutputStream os = conn.getOutputStream();
 			os.write(input.getBytes());
@@ -183,7 +184,7 @@ public class ProcurementSchedulerJob extends Job {
 		}
 	}
 
-	public String consumer() throws JMSException
+	public String messageConsumer() throws JMSException
 	{
 		String user = env("APOLLO_USER", "admin");
 		String password = env("APOLLO_PASSWORD", "password");
@@ -191,7 +192,7 @@ public class ProcurementSchedulerJob extends Job {
 		int port = Integer.parseInt(env("APOLLO_PORT", "61613"));
 		String queue = "/queue/96933.book.orders";
 		String destination = queue;
-		String temp= "";
+		String tempStr= "";
 
 		StompJmsConnectionFactory factory = new StompJmsConnectionFactory();
 		factory.setBrokerURI("tcp://" + host + ":" + port);
@@ -207,7 +208,7 @@ public class ProcurementSchedulerJob extends Job {
 		while(true)
 		{
 			Message msg = consumer.receive(5000);
-			System.out.println("consuming");
+			System.out.println("consuming messages from apollo queue");
 			if(msg == null)
 			{
 				break;
@@ -215,13 +216,12 @@ public class ProcurementSchedulerJob extends Job {
 
 			if( msg instanceof TextMessage )
 			{
-				System.out.println("consuming");
 				String body = ((TextMessage) msg).getText();
-				System.out.println("Received message = " + body);
+				System.out.println("Message Received = " + body);
 
-				temp = body.split(":")[1];
+				tempStr = body.split(":")[1];
 
-				temp = temp+",";
+				tempStr = tempStr+",";
 				if( "SHUTDOWN".equals(body))
 				{
 					break;
@@ -232,10 +232,10 @@ public class ProcurementSchedulerJob extends Job {
 			}
 		}
 		connection.close();
-		if(temp != "")
+		if(tempStr != "")
 		{
-			System.out.println("******temp string******: "+temp);
-			return temp.substring(0,temp.length()-1);
+			System.out.println("******tempStr******: "+tempStr);
+			return tempStr.substring(0,tempStr.length()-1);
 		}
 		else
 			return null;

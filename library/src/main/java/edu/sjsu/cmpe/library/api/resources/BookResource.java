@@ -33,12 +33,7 @@ public class BookResource {
     /** bookRepository instance */
     private final BookRepositoryInterface bookRepository;
 
-    /**
-     * BookResource constructor
-     * 
-     * @param bookRepository
-     *            a BookRepository instance
-     */
+   
     public BookResource(BookRepositoryInterface bookRepository) {
 	this.bookRepository = bookRepository;
     }
@@ -54,7 +49,7 @@ public class BookResource {
 		"GET"));
 	bookResponse.addLink(new LinkDto("update-book-status", "/books/"
 		+ book.getIsbn(), "PUT"));
-	// add more links
+	
 
 	return bookResponse;
     }
@@ -62,7 +57,7 @@ public class BookResource {
     @POST
     @Timed(name = "create-book")
     public Response createBook(@Valid Book request) {
-	// Store the new book in the BookRepository so that we can retrieve it.
+	
 	Book savedBook = bookRepository.saveBook(request);
 
 	String location = "/books/" + savedBook.getIsbn();

@@ -1,5 +1,5 @@
-DEBUG [2014-04-02 22:19:53,432] edu.sjsu.cmpe.library.LibraryService: library-a - Queue name is /queue/96933.book.orders. Topic name is /topic/96933.book.*
-WARN  [2014-04-02 22:19:53,455] com.yammer.dropwizard.config.ServerFactory: 
+DEBUG [2014-04-05 21:06:29,609] edu.sjsu.cmpe.library.LibraryService: library-a - Queue name is /queue/96933.book.orders. Topic name is /topic/96933.book.*
+WARN  [2014-04-05 21:06:29,647] com.yammer.dropwizard.config.ServerFactory: 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !    THIS SERVICE HAS NO HEALTHCHECKS. THIS MEANS YOU WILL NEVER KNOW IF IT    !
@@ -9,10 +9,10 @@ WARN  [2014-04-02 22:19:53,455] com.yammer.dropwizard.config.ServerFactory:
 !      USE THAT SERVICE. THINK OF IT AS A CONTINUOUS INTEGRATION TEST.         !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-INFO  [2014-04-02 22:19:53,535] com.yammer.dropwizard.cli.ServerCommand: Starting library-service
-INFO  [2014-04-02 22:19:53,547] org.eclipse.jetty.server.Server: jetty-8.y.z-SNAPSHOT
-INFO  [2014-04-02 22:19:53,659] com.sun.jersey.server.impl.application.WebApplicationImpl: Initiating Jersey application, version 'Jersey: 1.17.1 02/28/2013 12:47 PM'
-INFO  [2014-04-02 22:19:53,732] com.yammer.dropwizard.config.Environment: The following paths were found for the configured resources:
+INFO  [2014-04-05 21:06:29,750] com.yammer.dropwizard.cli.ServerCommand: Starting library-service
+INFO  [2014-04-05 21:06:29,753] org.eclipse.jetty.server.Server: jetty-8.y.z-SNAPSHOT
+INFO  [2014-04-05 21:06:29,878] com.sun.jersey.server.impl.application.WebApplicationImpl: Initiating Jersey application, version 'Jersey: 1.17.1 02/28/2013 12:47 PM'
+INFO  [2014-04-05 21:06:29,954] com.yammer.dropwizard.config.Environment: The following paths were found for the configured resources:
 
     DELETE  /library/v1/books/{isbn} (edu.sjsu.cmpe.library.api.resources.BookResource)
     GET     /library/v1/books/ (edu.sjsu.cmpe.library.api.resources.BookResource)
@@ -22,17 +22,17 @@ INFO  [2014-04-02 22:19:53,732] com.yammer.dropwizard.config.Environment: The fo
     GET     /library/ (edu.sjsu.cmpe.library.ui.resources.HomeResource)
     GET     /library/v1/ (edu.sjsu.cmpe.library.api.resources.RootResource)
 
-INFO  [2014-04-02 22:19:53,732] com.yammer.dropwizard.config.Environment: tasks = 
+INFO  [2014-04-05 21:06:29,954] com.yammer.dropwizard.config.Environment: tasks = 
 
     POST    /tasks/gc (com.yammer.dropwizard.tasks.GarbageCollectionTask)
 
-WARN  [2014-04-02 22:19:54,081] com.sun.jersey.spi.inject.Errors: The following warnings have been detected with resource and/or provider classes:
+WARN  [2014-04-05 21:06:30,324] com.sun.jersey.spi.inject.Errors: The following warnings have been detected with resource and/or provider classes:
   WARNING: A sub-resource method, public edu.sjsu.cmpe.library.dto.BooksDto edu.sjsu.cmpe.library.api.resources.BookResource.getAllBooks(), with URI template, "/", is treated as a resource method
-INFO  [2014-04-02 22:19:54,087] org.eclipse.jetty.server.AbstractConnector: Started InstrumentedBlockingChannelConnector@0.0.0.0:8001
-INFO  [2014-04-02 22:19:54,089] org.eclipse.jetty.server.AbstractConnector: Started SocketConnector@0.0.0.0:9001
-INFO  [2014-04-02 22:34:10,009] org.eclipse.jetty.server.Server: Graceful shutdown SocketConnector@0.0.0.0:9001
-INFO  [2014-04-02 22:34:10,011] org.eclipse.jetty.server.Server: Graceful shutdown InstrumentedBlockingChannelConnector@0.0.0.0:8001
-INFO  [2014-04-02 22:34:10,013] org.eclipse.jetty.server.Server: Graceful shutdown o.e.j.s.ServletContextHandler{/,null}
-INFO  [2014-04-02 22:34:10,013] org.eclipse.jetty.server.Server: Graceful shutdown o.e.j.s.ServletContextHandler{/,null}
-INFO  [2014-04-02 22:34:12,068] org.eclipse.jetty.server.handler.ContextHandler: stopped o.e.j.s.ServletContextHandler{/,null}
-INFO  [2014-04-02 22:34:12,069] org.eclipse.jetty.server.handler.ContextHandler: stopped o.e.j.s.ServletContextHandler{/,null}
+INFO  [2014-04-05 21:06:30,330] org.eclipse.jetty.server.AbstractConnector: Started InstrumentedBlockingChannelConnector@0.0.0.0:8001
+INFO  [2014-04-05 21:06:30,333] org.eclipse.jetty.server.AbstractConnector: Started SocketConnector@0.0.0.0:9001
+INFO  [2014-04-06 00:12:31,913] org.eclipse.jetty.server.Server: Graceful shutdown SocketConnector@0.0.0.0:9001
+INFO  [2014-04-06 00:12:31,914] org.eclipse.jetty.server.Server: Graceful shutdown InstrumentedBlockingChannelConnector@0.0.0.0:8001
+INFO  [2014-04-06 00:12:31,915] org.eclipse.jetty.server.Server: Graceful shutdown o.e.j.s.ServletContextHandler{/,null}
+INFO  [2014-04-06 00:12:31,915] org.eclipse.jetty.server.Server: Graceful shutdown o.e.j.s.ServletContextHandler{/,null}
+INFO  [2014-04-06 00:12:33,970] org.eclipse.jetty.server.handler.ContextHandler: stopped o.e.j.s.ServletContextHandler{/,null}
+INFO  [2014-04-06 00:12:33,971] org.eclipse.jetty.server.handler.ContextHandler: stopped o.e.j.s.ServletContextHandler{/,null}

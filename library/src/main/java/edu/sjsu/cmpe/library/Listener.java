@@ -53,49 +53,49 @@ public class Listener {
 		while(true)
 		{
 			try{
-				System.out.println("----------Start------------");
+				System.out.println("******Start******");
 				String user = env("APOLLO_USER", apolloUser);
 				String password = env("APOLLO_PASSWORD", apolloPassword);
 				String host = env("APOLLO_HOST", apolloHost);
 				int apolloport = Integer.parseInt(env("APOLLO_PORT", port));
 				String destination = stompTopic;
-				System.out.println("destination is "+destination);
-				StompJmsConnectionFactory factory = new StompJmsConnectionFactory();
-				factory.setBrokerURI("tcp://" + host + ":" + apolloport);
+				System.out.println("destination queue:: "+destination);
+				StompJmsConnectionFactory stompJmsConnectionFactory = new StompJmsConnectionFactory();
+				stompJmsConnectionFactory.setBrokerURI("tcp://" + host + ":" + apolloport);
 
-				Connection connection = factory.createConnection(user, password);
+				Connection connection = stompJmsConnectionFactory.createConnection(user, password);
 				connection.start();
 				Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 				Destination dest = new StompJmsDestination(destination);
 
-				MessageConsumer consumer = session.createConsumer(dest);
+				MessageConsumer messageConsumer = session.createConsumer(dest);
 				System.currentTimeMillis();
 				i=0;
 				System.out.println("******Waiting for messages...");
 				while(true) {
-					Message msg = consumer.receive();
+					Message msg = messageConsumer.receive();
 					if( msg instanceof TextMessage ) {
-						String body = ((TextMessage) msg).getText();
-						if( "SHUTDOWN".equals(body) ) {
+						String messageBody = ((TextMessage) msg).getText();
+						if( "SHUTDOWN".equals(messageBody) ) {
 							System.out.println("SHUTING DOWN******");
 							break;
 						}
-						System.out.println("Received message = " + body);
+						System.out.println("Received message = " + messageBody);
 
-						StringTokenizer strf = new StringTokenizer(body,":,\"");
-						while(strf.hasMoreTokens())
+						StringTokenizer strToken = new StringTokenizer(messageBody,":,\"");
+						while(strToken.hasMoreTokens())
 						{
-							isbn[i]= Long.parseLong(strf.nextToken());
+							isbn[i]= Long.parseLong(strToken.nextToken());
 							System.out.println("isbn is" + isbn[i]);
 
-							title[i]=strf.nextToken();
+							title[i]=strToken.nextToken();
 							System.out.println("Title is "+title[i]);
 
-							category[i] = strf.nextToken();
+							category[i] = strToken.nextToken();
 							System.out.println("Category is "+category[i]);
 
-							coverImage[i] = strf.nextToken()+":"+strf.nextToken();
-							System.out.println("Cover Image " +coverImage[i]);
+							coverImage[i] = strToken.nextToken()+":"+strToken.nextToken();
+							System.out.println("Cover Img:: " +coverImage[i]);
 							i++;
 						}
 
@@ -103,8 +103,8 @@ public class Listener {
 						if(i == 3)
 							break;
 					} else if (msg instanceof StompJmsMessage) {
-						StompJmsMessage smsg = ((StompJmsMessage) msg);
-						String body = smsg.getFrame().contentAsString();
+						StompJmsMessage sJmsMsg = ((StompJmsMessage) msg);
+						String body = sJmsMsg.getFrame().contentAsString();
 						if ("SHUTDOWN".equals(body)) {
 							System.out.println("SHUTING DOWN..StompJmsMessage");
 							break;
@@ -121,7 +121,7 @@ public class Listener {
 			catch(JMSException e)
 			{
 			}
-			System.out.println("finding book...");
+			System.out.println("Finding Book...");
 			Book book=null;
 
 			long ib;
@@ -137,9 +137,9 @@ public class Listener {
 						System.out.println("Book found");
 						if(book.getStatus()==Status.lost);
 						{
-							System.out.println("isbn of book is: " + book.getIsbn());
-							System.out.println("title of book is: "+book.getTitle());
-							System.out.println("status of book is: "+book.getStatus());
+							System.out.println("isbn : " + book.getIsbn());
+							System.out.println("title : "+book.getTitle());
+							System.out.println("status : "+book.getStatus());
 
 							bookRepository.updateLostToAvailable(ib,Status.available);
 						}

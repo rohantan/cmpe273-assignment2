@@ -26,10 +26,7 @@ public class ProcurementService extends Service<ProcurementServiceConfiguration>
     @Override
     public void initialize(Bootstrap<ProcurementServiceConfiguration> bootstrap) {
 	bootstrap.setName("procurement-service");
-	/**
-	 * NOTE: All jobs must be placed under edu.sjsu.cmpe.procurement.jobs
-	 * package
-	 */
+	
 	bootstrap.addBundle(new JobsBundle("edu.sjsu.cmpe.procurement.jobs"));
     }
 
@@ -40,14 +37,6 @@ public class ProcurementService extends Service<ProcurementServiceConfiguration>
 	.using(configuration.getJerseyClientConfiguration())
 	.using(environment).build();
 
-	/**
-	 * Root API - Without RootResource, Dropwizard will throw this
-	 * exception:
-	 * 
-	 * ERROR [2013-10-31 23:01:24,489]
-	 * com.sun.jersey.server.impl.application.RootResourceUriRules: The
-	 * ResourceConfig instance does not contain any root resource classes.
-	 */
 	environment.addResource(RootResource.class);
 
 	String queueName = configuration.getStompQueueName();
